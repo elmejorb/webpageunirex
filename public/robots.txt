@@ -1,0 +1,6 @@
+# robots.txt for Unirex S.A.S.
+User-agent: *
+Allow: /
+Sitemap: https://tudominio.com/sitemap.xml
+
+# Cambia el dominio de arriba por el dominio real antes de publicar.
