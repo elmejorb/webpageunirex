@@ -103,11 +103,14 @@ const Navbar = () => {
   );
 };
 
+const REMESA_BASE_URL = 'https://unirexsas.com/api_unirex/remesas/upload_remesa.php?img=';
+
 const TrackingTool = () => {
   const [guide, setGuide] = useState('');
-  const [status, setStatus] = useState<null | { stage: string; location: string; update: string }>(null);
+  const [status, setStatus] = useState<null | { stage: string; location: string; update: string; remesa: string | null }>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showRemesa, setShowRemesa] = useState(false);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,6 +118,7 @@ const TrackingTool = () => {
     setLoading(true);
     setStatus(null);
     setError(null);
+    setShowRemesa(false);
 
     try {
       const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEiLCJlbWFpbCI6ImVsbWVqb3JiQGdtYWlsLmNvbSIsImlkX3RpcG9zX3VzdWFyaW8iOiIxIiwiQVBJX1RJTUUiOjE3Njg4NjAwMjd9.bLUleQ-lWBBBrwlIUi2em47-tjli0ACqpasSFBAV8hg';
@@ -134,6 +138,7 @@ const TrackingTool = () => {
         stage: guiaData.nombre_estado_guia || 'Desconocido',
         location: guiaData.mun_nombre ? guiaData.mun_nombre.toUpperCase() : 'Sin ubicación',
         update: fechaUpdate,
+        remesa: guiaData.remesa || null,
       });
       setLoading(false);
     } catch (err) {
@@ -200,13 +205,44 @@ const TrackingTool = () => {
                   <p className="text-lg">{status.update}</p>
                 </div>
               </div>
-              <div className="mt-8 pt-6 border-t border-slate-700">
+              {status.remesa && (
+                <div className="mt-6 pt-6 border-t border-slate-700">
+                  <button
+                    onClick={() => setShowRemesa(true)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-all flex items-center gap-2"
+                  >
+                    <Package className="w-5 h-5" /> Ver Remesa
+                  </button>
+                </div>
+              )}
+              <div className="mt-6 pt-6 border-t border-slate-700">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                     <span className="text-slate-300">Monitoreo activo por sistema GPS</span>
                   </div>
-                  <button onClick={() => setStatus(null)} className="text-slate-400 hover:text-white underline text-sm">Cerrar consulta</button>
+                  <button onClick={() => { setStatus(null); setShowRemesa(false); }} className="text-slate-400 hover:text-white underline text-sm">Cerrar consulta</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Modal Remesa */}
+          {showRemesa && status?.remesa && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={() => setShowRemesa(false)}>
+              <div className="bg-slate-900 border border-slate-700 rounded-2xl p-4 max-w-2xl w-full mx-4 shadow-2xl" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-white">Remesa - Guía {guide}</h3>
+                  <button onClick={() => setShowRemesa(false)} className="text-slate-400 hover:text-white">
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+                <div className="flex justify-center bg-slate-800 rounded-xl p-2">
+                  <img
+                    src={`${REMESA_BASE_URL}${status.remesa}`}
+                    alt={`Remesa guía ${guide}`}
+                    className="max-h-[70vh] w-auto rounded-lg object-contain"
+                  />
                 </div>
               </div>
             </div>
