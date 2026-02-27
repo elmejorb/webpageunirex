@@ -378,7 +378,9 @@ const ClientsSection = () => {
     { name: 'Energy Logística', logo: '/img/clientes/Energy.jpg' },
     { name: 'TCC', logo: '/img/clientes/tcc.webp' },
     { name: 'Envia', logo: '/img/clientes/envia.png' },
-    { name: 'Logi Cuartas', logo: '/img/clientes/logo-logicuartas.png' }
+    { name: 'Logi Cuartas', logo: '/img/clientes/logo-logicuartas.png' },
+    { name: 'Servientrega', logo: '/img/clientes/servientrega-logo-png.png' },
+    { name: 'Veloenvios', logo: '/img/clientes/logo-test-veloenvios.png' }
   ];
 
   return (
